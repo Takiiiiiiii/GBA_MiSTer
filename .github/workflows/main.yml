@@ -45,7 +45,7 @@ jobs:
           WORKDIR /project
           COPY . .
           RUN set -e && \\
-              PROJECT_NAME=\$(basename "\$(find . -maxdepth 1 -name '*.qpf')") && \\
+              PROJECT_NAME=\$(basename "\$(find . -maxdepth 1 -name '*.qpf' -not -name '*_Q13.qpf' | head -n 1)") && \\
               echo "Compiling project: \$PROJECT_NAME" && \\
               /opt/intelFPGA_lite/quartus/bin/quartus_sh --flow compile "\$PROJECT_NAME" && \\
               RBF=\$(find output_files -name '*.rbf' | head -n1) && \\
@@ -80,5 +80,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }}   # e.g. Gameboy_20251201 or menu_20251201
+          name: ${{ env.ARTIFACT_NAME }}
           path: ${{ env.RBF_PATH }}
